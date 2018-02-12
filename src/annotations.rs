@@ -20,7 +20,7 @@ impl ToString for Content {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum AnnotationType {
     Highlight,
     Comment(String)
@@ -67,10 +67,6 @@ mod tests {
 
         assert_eq!(annotation1.text(), "Microsoft Xbox");
         assert_eq!(annotation2.text(), "Destiny 2");
-
-        match annotation1.metadata {
-            AnnotationType::Highlight => panic!("Failed to extract comment!"),
-            AnnotationType::Comment(ref c) => assert_eq!(c, &"The best gaming system.")
-        }
+        assert_eq!(annotation1.metadata, AnnotationType::Comment("The best gaming system.".to_string()));
     }
 }
