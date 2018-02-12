@@ -41,7 +41,7 @@ mod tests {
     fn can_add_annotations() {
         let text = "Mary had a little lamb.".to_string();
         let mut ac = AnnotatedContent::new(text);
-        let person = Annotation::new(0, 4, "NER".to_string(), "PERSON".to_string(), &ac.content);
+        let person = Annotation::new(0, 4, AnnotationType::Highlight, &ac.content);
 
         ac.add_annotation(person);
 

@@ -20,12 +20,17 @@ impl ToString for Content {
     }
 }
 
+#[derive(Debug)]
+pub enum AnnotationType {
+    Highlight,
+    Comment(String)
+}
+
 // an annotation on the text
 pub struct Annotation {
     pub start: usize,
     pub length: usize,
-    pub name: String, // The kind of annotation, e.g. automobile
-    pub label: String, // The annotation label, e.g. BMW
+    pub metadata: AnnotationType,
     pub (crate) parent: Rc<Content>// The `Content` on which this annotation is overlaid
 }
 
@@ -34,14 +39,14 @@ impl Annotation {
         &self.parent.text[self.start..(self.start + self.length)]
     }
 
-    pub fn new(start: usize, length: usize, name: String, label: String, parent: &Rc<Content>) -> Annotation {
-        Annotation {start, length, name, label, parent: Rc::clone(parent)}
+    pub fn new(start: usize, length: usize, metadata: AnnotationType, parent: &Rc<Content>) -> Annotation {
+        Annotation {start, length, metadata, parent: Rc::clone(parent)}
     }
 }
 
 impl ToString for Annotation {
     fn to_string(&self) -> String {
-        format!("Annotation(text: {}, name: {}, label: {})", self.text(), self.name, self.label)
+        format!("Annotation(text: {}, metadata: {:?})", self.text(), self.metadata)
     }
 }
 
@@ -54,10 +59,18 @@ mod tests {
         let text = "Destiny 2 is a video game on Microsoft Xbox.".to_string();
         let content = Rc::new(Content {text});
 
-        let annotation1 = Annotation::new(29, 14, "NER".to_string(), "business_name".to_string(), &content);
-        let annotation2 = Annotation::new(0, 9, "NER".to_string(), "video_game".to_string(), &content);
+        let md1 = AnnotationType::Comment("The best gaming system.".to_string());
+
+        let annotation1 = Annotation::new(29, 14, md1, &content);
+
+        let annotation2 = Annotation::new(0, 9, AnnotationType::Highlight, &content);
 
         assert_eq!(annotation1.text(), "Microsoft Xbox");
         assert_eq!(annotation2.text(), "Destiny 2");
+
+        match annotation1.metadata {
+            AnnotationType::Highlight => panic!("Failed to extract comment!"),
+            AnnotationType::Comment(ref c) => assert_eq!(c, &"The best gaming system.")
+        }
     }
 }
