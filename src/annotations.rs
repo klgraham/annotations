@@ -3,6 +3,8 @@
 
 use std::string::ToString;
 use std::rc::Rc;
+use std::fmt;
+use chrono::{DateTime, Utc};
 
 
 /// Raw text content that can be annotated
@@ -30,6 +32,7 @@ pub struct Annotation {
     pub start: usize,
     pub length: usize,
     pub overlay: AnnotationType,
+    pub timestamp: DateTime<Utc>,
     /// The `Content` on which this annotation is overlaid
     parent: Rc<Content>
 }
@@ -40,14 +43,15 @@ impl Annotation {
         &self.parent.text[self.start..(self.start + self.length)]
     }
 
-    pub fn new(start: usize, length: usize, metadata: AnnotationType, parent: &Rc<Content>) -> Annotation {
-        Annotation {start, length, overlay: metadata, parent: Rc::clone(parent)}
+    pub fn new(start: usize, length: usize, overlay: AnnotationType, parent: &Rc<Content>) -> Annotation {
+        let timestamp = Utc::now();
+        Annotation {start, length, overlay, timestamp, parent: Rc::clone(parent)}
     }
 }
 
-impl ToString for Annotation {
-    fn to_string(&self) -> String {
-        format!("Annotation(text: {}, metadata: {:?})", self.text(), self.overlay)
+impl fmt::Display for Annotation {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Annotation(text: {}, overlay: {:?}, timestamp: {})", self.text(), self.overlay, self.timestamp)
     }
 }
 
@@ -68,5 +72,6 @@ mod tests {
         assert_eq!(annotation1.text(), "Microsoft Xbox");
         assert_eq!(annotation2.text(), "Destiny 2");
         assert_eq!(annotation1.overlay, AnnotationType::Comment(String::from("The best gaming system.")));
+        println!("{}", annotation2);
     }
 }
