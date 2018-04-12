@@ -1,12 +1,13 @@
-mod annotations;
+extern crate chrono;
+
+pub mod annotations;
 
 use annotations::*;
 use std::collections::HashMap;
 use std::rc::Rc;
 
 
-//An annotation can be retreived using the starting index of the text onto which
-//it's overlaid.
+/// Raw text and a collection of annotations overlaid on top of the text
 struct AnnotatedContent {
     content: Rc<Content>,
     annotations: HashMap<usize, Annotation>
