@@ -1,7 +1,6 @@
 /// This module describes a span of text that can have annotations
 /// overlaid on top of it.
 
-use std::string::ToString;
 use std::rc::Rc;
 use std::fmt;
 use chrono::{DateTime, Utc};
@@ -12,9 +11,9 @@ pub struct Content {
     pub text: String
 }
 
-impl ToString for Content {
-    fn to_string(&self) -> String {
-        format!("{}", self.text)
+impl fmt::Display for Content {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.text)
     }
 }
 
