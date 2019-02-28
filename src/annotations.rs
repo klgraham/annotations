@@ -1,5 +1,5 @@
-/// This module describes a span of text that can have annotations
-/// overlaid on top of it.
+//! This module describes a span of text that can have annotations overlaid
+//! on top of it.
 
 use std::rc::Rc;
 use std::fmt;
@@ -11,6 +11,7 @@ pub struct Content {
     pub text: String
 }
 
+// Writes Content to stdout
 impl fmt::Display for Content {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.text)
@@ -22,15 +23,21 @@ impl fmt::Display for Content {
 #[derive(Debug, PartialEq)]
 pub enum AnnotationType {
     Highlight,
-    Comment(String)
+    Comment(String),
+    Boldface,
+    Underline
 }
 
 
-// An annotation on top of the text in `Content`
+/// An annotation on top of the text in `Content`
 pub struct Annotation {
+    /// Index where the `Annotation` starts in `Content.text`.
     pub start: usize,
+    // todo: lookup whether `length` is number of characters or what in a `String`
+    /// Length of the `Annotation`
     pub length: usize,
     pub overlay: AnnotationType,
+    /// Time at which the `Annotation` was created
     pub timestamp: DateTime<Utc>,
     /// The `Content` on which this annotation is overlaid
     parent: Rc<Content>
@@ -48,6 +55,7 @@ impl Annotation {
     }
 }
 
+// Writes an Annotation to stdout 
 impl fmt::Display for Annotation {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Annotation(text: {}, overlay: {:?}, timestamp: {})", self.text(), self.overlay, self.timestamp)
