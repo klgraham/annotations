@@ -77,7 +77,6 @@ mod tests {
         assert_eq!(annotation1.text(), "Microsoft Xbox");
         assert_eq!(annotation2.text(), "Destiny 2");
         assert_eq!(annotation1.overlay, AnnotationType::Highlight);
-//        println!("{}", annotation2);
     }
 
     #[test]
@@ -95,6 +94,5 @@ mod tests {
         assert_eq!(annotation2.text(), "Destiny 2");
         assert_eq!(annotation1.overlay, AnnotationType::Comment(String::from("The best gaming system.")));
         assert_eq!(annotation2.overlay, AnnotationType::Comment(String::from("The best first-person shooter, to date.")));
-//        println!("{}", annotation2);
     }
 }
