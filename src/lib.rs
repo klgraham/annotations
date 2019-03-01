@@ -1,14 +1,14 @@
 extern crate chrono;
 
-pub mod annotations;
+pub mod annotation;
 
-use annotations::*;
+use annotation::*;
 use std::collections::HashMap;
 use std::rc::Rc;
 
 
 /// Raw text and a collection of annotations overlaid on top of the text
-struct AnnotatedContent {
+pub struct AnnotatedContent {
     content: Rc<Content>,
     annotations: HashMap<usize, Annotation>
 }
