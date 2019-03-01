@@ -55,7 +55,7 @@ impl Annotation {
     }
 }
 
-// Writes an Annotation to stdout 
+// Writes an Annotation to stdout
 impl fmt::Display for Annotation {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Annotation(text: {}, overlay: {:?}, timestamp: {})", self.text(), self.overlay, self.timestamp)
@@ -67,18 +67,34 @@ mod tests {
     use super::*;
 
     #[test]
-    fn can_create_annotations() {
+    fn can_create_highlight_annotations() {
         let text = String::from("Destiny 2 is a video game on Microsoft Xbox.");
         let content = Rc::new(Content {text});
 
-        let md1 = AnnotationType::Comment(String::from("The best gaming system."));
-
-        let annotation1 = Annotation::new(29, 14, md1, &content);
+        let annotation1 = Annotation::new(29, 14, AnnotationType::Highlight, &content);
         let annotation2 = Annotation::new(0, 9, AnnotationType::Highlight, &content);
 
         assert_eq!(annotation1.text(), "Microsoft Xbox");
         assert_eq!(annotation2.text(), "Destiny 2");
+        assert_eq!(annotation1.overlay, AnnotationType::Highlight);
+//        println!("{}", annotation2);
+    }
+
+    #[test]
+    fn can_create_comment_annotations() {
+        let text = String::from("Destiny 2 is a video game on Microsoft Xbox.");
+        let content = Rc::new(Content {text});
+
+        let md1 = AnnotationType::Comment(String::from("The best gaming system."));
+        let md2 = AnnotationType::Comment(String::from("The best first-person shooter, to date."));
+
+        let annotation1 = Annotation::new(29, 14, md1, &content);
+        let annotation2 = Annotation::new(0, 9, md2, &content);
+
+        assert_eq!(annotation1.text(), "Microsoft Xbox");
+        assert_eq!(annotation2.text(), "Destiny 2");
         assert_eq!(annotation1.overlay, AnnotationType::Comment(String::from("The best gaming system.")));
-        println!("{}", annotation2);
+        assert_eq!(annotation2.overlay, AnnotationType::Comment(String::from("The best first-person shooter, to date.")));
+//        println!("{}", annotation2);
     }
 }
